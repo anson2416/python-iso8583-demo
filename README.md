@@ -153,3 +153,10 @@ python src/visa_pin_generator.py
 - Correct Implementation: Follows the standard Visa PVV algorithm, including data selection, DES encryption, and PVV extraction.
 - Security Note: Uses the 'pycryptodome' library for DES encryption. Remember that the PIN Verification Key (PVK) is highly sensitive and must be managed securely, typically within a Hardware Security Module (HSM) in a production environment.
 - Clarity: The code is commented, type-hinted, and includes a runnable example to demonstrate its usage and verify its correctness.
+
+### 3DES ECB Demo
+
+```bash
+pip install pycryptodome
+uv add pycryptodome
+```
