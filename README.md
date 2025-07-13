@@ -48,7 +48,10 @@ Manual install the python package via `uv`:
 
 ```bash
 uv add pyiso8583
+# modifies your dependency files;
 uv add --dev pytest
+# only installs the package.
+uv pip install --dev pytest
 ```
 
 ## Running Tests
@@ -56,7 +59,7 @@ uv add --dev pytest
 To ensure everything is working correctly, run the unit tests using `pytest`.
 
 ```bash
-uv run pytest
+uv run pytest -v
 ```
 
 You should see the tests pass successfully.

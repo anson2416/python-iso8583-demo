@@ -12,8 +12,8 @@ classifiers = [
 ]
 dependencies = [
     "pyiso8583>=3.0.0",
+    "cryptography>=42.0.0",
 ]
-
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -22,3 +22,4 @@ where = ["src"]
 dev = [
     "pytest>=8.3.5",
 ]
+
