@@ -208,7 +208,6 @@ dev = [
 
 [package.metadata]
 requires-dist = [{ name = "pyiso8583", specifier = ">=3.0.0" }]
-provides-extras = ["test"]
 
 [package.metadata.requires-dev]
 dev = [{ name = "pytest", specifier = ">=8.3.5" }]

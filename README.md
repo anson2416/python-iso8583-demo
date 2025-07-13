@@ -61,6 +61,13 @@ uv run pytest
 
 You should see the tests pass successfully.
 
+## How to Run the App
+
+```bash
+uv run main.py
+```
+
+
 ## How to Use
 
 You can use the `generate_visa_auth_message` function from a Python script or an interactive session.

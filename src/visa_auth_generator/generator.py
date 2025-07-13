@@ -1,6 +1,7 @@
 import json
-from pyiso8583.iso8583 import ISO8583
-from pyiso8583.specs import default_ascii as spec
+import iso8583
+from iso8583.specs import default_ascii as spec
+import pprint
 
 # Customize the spec for specific fields if needed.
 # For example, DE 55 for chip data is often binary.
@@ -39,35 +40,40 @@ def generate_visa_auth_message(
     Returns:
         bytes: The encoded ISO 8583 message.
     """
-    iso_message = ISO8583()
-    iso_message.set_mti('0100')
+    # Build the message dictionary
+    msg = {
+        't': '0100',
+        '2': pan,
+        '3': processing_code,
+        '4': f"{transaction_amount:012d}",
+        '11': stan,
+        '12': local_transaction_time,
+        '13': local_transaction_date,
+        '14': expiration_date,
+        '22': pos_entry_mode,
+        '32': acquiring_institution_id,
+    }
+    # if pin_data:
+    #     msg['52'] = bytes.fromhex(pin_data)
+    # if chip_data:
+    #     msg['55'] = bytes.fromhex(chip_data)
 
-    # Populate Data Elements
-    iso_message.set_element('2', pan)
-    iso_message.set_element('3', processing_code)
-    iso_message.set_element('4', f"{transaction_amount:012d}") # 12 digits, zero-padded
-    iso_message.set_element('11', stan)
-    iso_message.set_element('12', local_transaction_time)
-    iso_message.set_element('13', local_transaction_date)
-    iso_message.set_element('14', expiration_date)
-    iso_message.set_element('22', pos_entry_mode)
-    iso_message.set_element('32', acquiring_institution_id)
+    # Return the encoded message (bytearray)
+    encoded_raw, encoded = iso8583.encode(msg, spec)
+    pprint.pprint(msg)
+    pprint.pprint(encoded)
+    print(f"iso8583.pp decoded message")
+    iso8583.pp(msg, spec)
+    print(f"iso8583.pp decoded message")
+    iso8583.pp(encoded, spec)
 
-    # PIN Data (DE 52) - should be a hex string representing binary data
-    if pin_data:
-        iso_message.set_element('52', bytes.fromhex(pin_data))
-
-    # ICC (Chip) Data (DE 55) - should be a hex string representing TLV data
-    if chip_data:
-        iso_message.set_element('55', bytes.fromhex(chip_data))
-
-    # The library automatically calculates and adds the bitmap
-    encoded_message, _ = iso_message.build(spec=spec)
-
-    return encoded_message
+    return encoded_raw
 
 def decode_message(encoded_message: bytes) -> dict:
     """Decodes an ISO 8583 message for verification."""
-    iso_message = ISO8583()
-    iso_message.parse(encoded_message, spec=spec)
-    return json.loads(iso_message.json())
+    msg, _ = iso8583.decode(encoded_message, spec)
+    # Convert binary fields to hex for readability
+    for k in ['52', '55']:
+        if k in msg and isinstance(msg[k], (bytes, bytearray)):
+            msg[k] = msg[k].hex()
+    return msg
