@@ -139,3 +139,17 @@ iso_message.set_element('55', bytes.fromhex(chip_data_hex))
 
 The function `bytes.fromhex()` converts this hex string into the raw binary format that the `pyiso8583` library and payment networks expect for binary fields like DE 55. The specific tags required in DE 55 are defined by the card schemes (Visa, Mastercard, etc.) and can vary based on the transaction type.
 ```
+
+### PIN Generator
+
+```bash
+uv pip install pycryptodome
+python src/visa_pin_generator.py
+```
+
+**Key Features:**
+
+- Input Validation: Ensures that the PAN, PIN, PVKI, and PVK meet the required specifications.
+- Correct Implementation: Follows the standard Visa PVV algorithm, including data selection, DES encryption, and PVV extraction.
+- Security Note: Uses the 'pycryptodome' library for DES encryption. Remember that the PIN Verification Key (PVK) is highly sensitive and must be managed securely, typically within a Hardware Security Module (HSM) in a production environment.
+- Clarity: The code is commented, type-hinted, and includes a runnable example to demonstrate its usage and verify its correctness.
