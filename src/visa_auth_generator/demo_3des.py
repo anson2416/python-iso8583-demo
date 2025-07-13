@@ -31,6 +31,26 @@ def decrypt_pin_3des(encrypted_data: bytes, key: bytes) -> str:
     unpadded_data = unpad_data(decrypted_data)
     return unpadded_data.decode()
 
+def hex_to_bytes(hex_str: str) -> bytes:
+    """Convert hex string to bytes"""
+    return binascii.unhexlify(hex_str.replace(' ', ''))
+
+def decrypt_pin_from_hex(encrypted_pin_hex: str, key_hex: str) -> str:
+    """
+    Decrypt PIN from hex string using 3DES key in hex format
+    Args:
+        encrypted_pin_hex: Encrypted PIN in hex format
+        key_hex: 3DES key in hex format (24 bytes / 48 hex chars)
+    Returns:
+        Decrypted PIN as string
+    """
+    try:
+        encrypted_data = hex_to_bytes(encrypted_pin_hex)
+        key = hex_to_bytes(key_hex)
+        return decrypt_pin_3des(encrypted_data, key)
+    except Exception as e:
+        raise ValueError(f"Failed to decrypt PIN: {str(e)}")
+
 def main():
     # Demo PIN encryption/decryption
     pin = "123456"
